@@ -3,10 +3,12 @@
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -19,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.scene.input.MouseEvent;
 
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -125,14 +128,24 @@ public class BrakeZone extends Application
         TextField dateTf = new TextField(dtf.format(date));
         TextField vehNameTf = new TextField();
         TextField authorTf = new TextField();
-        TextField vehClassTf = new TextField();
-        TextField massGVWTotalTf = new TextField();
-        TextField massGVWFrontTf = new TextField();
-        TextField massGVWRearTf = new TextField();
-        TextField massLLWTotalTf = new TextField();
-        TextField massLLWFrontTf = new TextField();
-        TextField massLLWRearTf = new TextField();
-        TextField massGTWTotalTf = new TextField();
+
+        ComboBox<String> vehClassCb = new ComboBox<>();
+        vehClassCb.getItems().addAll("M1","M2","M3","N1","N2","N3");
+        vehClassCb.setStyle("-fx-font: 12px Consolas");
+
+
+        TextField massGVWTotalTf = new TextField("0.0");
+        TextField massGVWFrontTf = new TextField("0.0");
+        TextField massGVWRearTf = new TextField("0.0");
+        TextField massLLWTotalTf = new TextField("0.0");
+        TextField massLLWFrontTf = new TextField("0.0");
+        TextField massLLWRearTf = new TextField("0.0");
+        TextField massGTWTotalTf = new TextField("0.0");
+        TextField cogLLW_Tf = new TextField("0.0");
+        TextField cogGVW_Tf = new TextField("0.0");
+        TextField pedalRatioTf = new TextField();
+        TextField pedalEffTf = new TextField();
+        TextField pedalTravelTf = new TextField();
 
 
         reportNoTf.setFont(Font.font("Consolas"));
@@ -140,7 +153,7 @@ public class BrakeZone extends Application
         dateTf.setFont(Font.font("Consolas"));
         vehNameTf.setFont(Font.font("Consolas"));
         authorTf.setFont(Font.font("Consolas"));
-        vehClassTf.setFont(Font.font("Consolas"));
+
         massGVWTotalTf.setFont(Font.font("Consolas"));
         massGVWFrontTf.setFont(Font.font("Consolas"));
         massGVWRearTf.setFont(Font.font("Consolas"));
@@ -148,6 +161,11 @@ public class BrakeZone extends Application
         massLLWFrontTf.setFont(Font.font("Consolas"));
         massLLWRearTf.setFont(Font.font("Consolas"));
         massGTWTotalTf.setFont(Font.font("Consolas"));
+        cogLLW_Tf.setFont(Font.font("Consolas"));
+        cogGVW_Tf.setFont(Font.font("Consolas"));
+        pedalRatioTf.setFont(Font.font("Consolas"));
+        pedalEffTf.setFont(Font.font("Consolas"));
+        pedalTravelTf.setFont(Font.font("Consolas"));
 
         massGTWTotalTf.setPrefWidth(20);
 
@@ -158,7 +176,8 @@ public class BrakeZone extends Application
         massLLWFrontTf.setAlignment(Pos.CENTER_RIGHT);
         massLLWRearTf.setAlignment(Pos.CENTER_RIGHT);
         massGTWTotalTf.setAlignment(Pos.CENTER_RIGHT);
-
+        cogGVW_Tf.setAlignment(Pos.CENTER_RIGHT);
+        cogLLW_Tf.setAlignment(Pos.CENTER_RIGHT);
 
         ImageView smdLogo = new ImageView("image/SMD_2.png");
         // smdLogo.setFitHeight(100);
@@ -179,7 +198,7 @@ public class BrakeZone extends Application
         gp1.add(vehNameLbl,0,7);
         gp1.add(vehNameTf,1,7);
         gp1.add(vehClassLbl,0,8);
-        gp1.add(vehClassTf,1,8);
+        gp1.add(vehClassCb,1,8);
 
         gp2.add(vehMassLbl,0,0);
         gp2.add(massTotalLbl,0,1);
@@ -189,12 +208,18 @@ public class BrakeZone extends Application
         gp2.add(massGVWTotalTf,1,1);
         gp2.add(massGVWFrontTf,1,2);
         gp2.add(massGVWRearTf,1,3);
+        gp2.add(cogGVW_Tf,1,5);
+        gp2.add(cogLLW_Tf,3,5);
 
         gp2.add(massLLWTotalTf,3,1);
         gp2.add(massLLWFrontTf,3,2);
         gp2.add(massLLWRearTf,3,3);
 
         gp2.add(massGTWTotalTf,5,1);
+
+        gp2.add(pedalRatioTf,1,8);
+        gp2.add(pedalEffTf,1,9);
+        gp2.add(pedalTravelTf,1,10);
 
         gp2.add(gvwLbl,1,0);
         gp2.add(llwLbl,3,0);
@@ -206,7 +231,18 @@ public class BrakeZone extends Application
         gp2.add(labelFormat("kg"),4,2);
         gp2.add(labelFormat("kg"),4,3);
         gp2.add(labelFormat("kg"),6,1);
+        gp2.add(labelFormat("C of G Height"),0,5);
+        gp2.add(labelFormat("mm"),2,5);
+        gp2.add(labelFormat("mm"),4,5);
 
+        gp2.add(new Line(0,0,100,0),0,6);
+        gp2.add(labelFormat("Brake Pedal"),0,7);
+        gp2.add(labelFormat("Ratio"),0,8);
+        gp2.add(labelFormat("Efficiency"),0,9);
+        gp2.add(labelFormat("Reqd. Travel"),0,10);
+        gp2.add(labelFormat(": 1"),2,8);
+        gp2.add(labelFormat("%"),2,9);
+        gp2.add(labelFormat("mm"),2,10);
 
 
         gp2.setOnMousePressed(e -> {
@@ -220,6 +256,11 @@ public class BrakeZone extends Application
 
             massGVWRearTf.setText(String.valueOf(massGVWRear));
             massLLWRearTf.setText(String.valueOf(massLLWRear));
+
+            massGVWTotalTf.setText(String.format("%.1f",Double.parseDouble(massGVWTotalTf.getText())));
+            massGVWFrontTf.setText(String.format("%.1f",Double.parseDouble(massGVWFrontTf.getText())));
+            massGVWRearTf.setText(String.format("%.1f",Double.parseDouble(massGVWRearTf.getText())));
+            cogGVW_Tf.setText(String.format("%.1f",Double.parseDouble(cogGVW_Tf.getText())));
         });
 
         Scene scene = new Scene(bp);
